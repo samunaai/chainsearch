@@ -38,7 +38,7 @@ from tqdm.auto import tqdm
 
 RUN_TAG = "exp34"
 
-ASTAR_DIR = Path("/workspace/sam/minireason_archives/data_pts/astar")
+ASTAR_DIR = Path("/workspace/user/chainsearch_archives/data_pts/astar")
 PROBING_DIR = ASTAR_DIR / "probing"
 
 RESULTS_PATH = PROBING_DIR / f"{RUN_TAG}_astar_probe_results.pt"
@@ -59,6 +59,7 @@ COMPACT_ALL_TRACES_TITLE_Y = 1.065
 COMPACT_MAX_8_BACKTRACKS_TITLE_Y = 1.065
 
 COLOR_BG = "#FCFCFD"
+COLOR_CANVAS = "#FFFFFF"
 COLOR_PANEL = "#F2F6FF"
 COLOR_DEEP_BLUE = "#1C4587"
 COLOR_PASTEL_BLUE = "#7CA6DE"
@@ -119,8 +120,8 @@ plt.rcParams.update({
     "ytick.labelsize": 10.5,
     "legend.fontsize": 10.5,
     "figure.titlesize": 15,
-    "figure.facecolor": COLOR_BG,
-    "savefig.facecolor": COLOR_BG,
+    "figure.facecolor": COLOR_CANVAS,
+    "savefig.facecolor": COLOR_CANVAS,
     "axes.facecolor": COLOR_PANEL,
     "axes.edgecolor": COLOR_DEEP_BLUE,
     "axes.labelcolor": COLOR_DEEP_BLUE,
@@ -649,7 +650,7 @@ def plot_attention_position_distributions(ctx: PlotContext) -> list[Path]:
         labels, values_by_position, section_ranges = semantic_attention_data(ctx, group["sections"])
         positions = np.arange(1, len(labels) + 1)
 
-        fig, ax = plt.subplots(figsize=(max(10.0, 1.18 * len(labels)), 6.0))
+        fig, ax = plt.subplots(figsize=(10.0, 4.38))
         boxplot = ax.boxplot(values_by_position, positions=positions, widths=0.55, patch_artist=True, showfliers=False, manage_ticks=False)
 
         for box in boxplot["boxes"]:
@@ -711,20 +712,43 @@ def plot_attention_position_distributions(ctx: PlotContext) -> list[Path]:
         )
 
         figure_title = {
-            "final_answer_signal": "Final-answer probe performance across semantic positions",
-            "reachability": "Reachability probe performance across semantic positions",
+            "final_answer_signal": "Probe Final-answer performance across token positions",
+            "reachability": "Probe Reachability performance across token positions",
         }[group_name]
-        title_fontsize = 15 if group_name == "final_answer_signal" else 12
+        title_fontsize = 12.5
         fig.suptitle(
             figure_title,
-            y=0.97 if group_name == "reachability" else 0.98,
+            x=0.53,
+            y=0.98,
             fontsize=title_fontsize,
             color=COLOR_FIGURE_TITLE,
         )
 
+        ax.tick_params(axis="both", labelsize=9.5)
+        ax.set_xlabel(
+            "Token position",
+            fontsize=11.2,
+            color=COLOR_DEEP_BLUE,
+            labelpad=7,
+        )
+        ax.set_ylabel(
+            metric_label(ctx.metric),
+            fontsize=10,
+            color=COLOR_DEEP_BLUE,
+        )
+
         ax.grid(axis="y", alpha=0.2)
-        ax.legend(handles=attention_distribution_legend(), loc="best")
-        fig.subplots_adjust(top=0.89)
+        ax.legend(
+            handles=attention_distribution_legend()[:-1],
+            loc="upper left",
+            fontsize=9,
+        )
+        fig.subplots_adjust(
+            left=0.10,
+            right=0.98,
+            bottom=0.32,
+            top=0.86,
+        )
 
         outputs.append(save_figure(fig, ctx.output_dir / "attention_position_distributions" / f"{group_name}.png", ctx.dpi))
 
@@ -1720,7 +1744,7 @@ def plot_compact_attention_position_figure(ctx: PlotContext) -> Path:
     fig, axes = plt.subplots(
         2,
         1,
-        figsize=(10.0, 7.6),
+        figsize=(10.0, 7.45),
         sharey=True,
     )
     rng = np.random.default_rng(42)
@@ -1729,14 +1753,14 @@ def plot_compact_attention_position_figure(ctx: PlotContext) -> Path:
         axes[0],
         ctx,
         group_name="reachability",
-        panel_title="Reachability",
+        panel_title="Probe Reachability performance across token positions",
         rng=rng,
     )
     draw_compact_attention_position_panel(
         axes[1],
         ctx,
         group_name="final_answer_signal",
-        panel_title="Final-answer correctness",
+        panel_title="Probe Final-answer performance across token positions",
         rng=rng,
     )
 

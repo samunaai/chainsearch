@@ -49,7 +49,7 @@ STEERING_RUN_TAG = "exp34"
 SEED = 42
 ASTAR_DIR = probe.ASTAR_DIR
 EVALUATION_DIR = os.path.join(ASTAR_DIR, "steering_evaluations")
-STEERING_EXAMPLE_DIR = "/workspace/sam/minireason_archives/steering_examples"
+STEERING_EXAMPLE_DIR = "/workspace/user/chainsearch_archives/steering_examples"
 CAA_PATH = os.path.join(ASTAR_DIR, "caa", f"{SOURCE_RUN_TAG}_astar_caa_vectors.pt")
 DIRECT_PATH = os.path.join(ASTAR_DIR, "direct_optimisation", f"{SOURCE_RUN_TAG}_astar_direct_optimisation_vectors.pt")
  

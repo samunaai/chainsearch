@@ -38,12 +38,13 @@ import torch
 # =============================================================================
 
 RUN_TAG = "exp34"
-ASTAR_DIR = Path("/workspace/sam/minireason_archives/data_pts/astar")
+ASTAR_DIR = Path("/workspace/user/chainsearch_archives/data_pts/astar")
 DEFAULT_INPUT = (ASTAR_DIR / "vector_types_comparison" / f"{RUN_TAG}_vector_types_comparison.pt")
 DEFAULT_OUTPUT_DIR = Path(f"{RUN_TAG}_steering_method_vector_plots")
 DEFAULT_DPI = 220
 
 COLOR_BG = "#FCFCFD"
+COLOR_CANVAS = "#FFFFFF"
 COLOR_PANEL = "#F2F6FF"
 COLOR_GRID = "#C9D6EE"
 COLOR_TEXT = "#26364F"
@@ -100,6 +101,8 @@ plt.rcParams.update({
     "figure.titlesize": 15,
     "figure.facecolor": COLOR_BG,
     "savefig.facecolor": COLOR_BG,
+    "figure.facecolor": COLOR_CANVAS,
+    "savefig.facecolor": COLOR_CANVAS,
     "axes.facecolor": COLOR_PANEL,
     "axes.edgecolor": COLOR_BLUE,
     "axes.labelcolor": COLOR_BLUE,
@@ -490,19 +493,19 @@ def plot_sparse_successive_position_stability(
         ax.set_yticks(y, [REPRESENTATION_DISPLAY[name] for name in representations])
         if len(transitions) > 1:
             ax.set_title(token_position_pair_label(transition).replace("\n", " "))
-        ax.set_xlabel(r"Successive-position stability $S^{\mathrm{S}}$")
+        ax.set_xlabel(r"Successive-position stability $S^{\mathrm{S}}$",fontsize=12,)
         ax.grid(True, axis="x", alpha=0.75, linewidth=0.8)
         ax.spines[["top", "right"]].set_visible(False)
 
     axes[0].invert_yaxis()
-    axes[0].set_ylabel("Model component")
+    axes[0].set_ylabel("Model component", fontsize=12,)
     handles = [Line2D([0], [0], color=METHOD_COLOR[m], marker=METHOD_MARKER[m], linestyle="none", label=METHOD_DISPLAY[m]) for m in methods]
     fig.tight_layout(rect=(0.0, 0.0, 1.0, 0.82))
     plot_left = min(ax.get_position().x0 for ax in axes)
     plot_right = max(ax.get_position().x1 for ax in axes)
     header_x = 0.5 * (plot_left + plot_right) + 0.015
     fig.legend(handles=handles, loc="upper center", ncol=len(methods), bbox_to_anchor=(header_x, 0.91))
-    fig.suptitle(title, x=0.5 + 0.015, y=0.99, ha="center", fontsize=13.5, color=COLOR_FIGURE_TITLE)
+    fig.suptitle(title, x=0.5 + 0.015, y=0.99, ha="center", fontsize=13.0, color=COLOR_FIGURE_TITLE)
     return save_figure(fig, args.output_dir, stem, args.formats, args.dpi)
 
 

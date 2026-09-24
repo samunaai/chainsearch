@@ -78,7 +78,7 @@ TARGET_RANGES = {
 
 BASE_PARAMS = dict(
     dataset_path=None,
-    artifacts_dir="/workspace/sam/minireason_archives/data_pts",
+    artifacts_dir="/workspace/user/chainsearch_archives/data_pts",
     log_dir=os.getcwd(),
     seed=42,
 )

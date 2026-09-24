@@ -32,7 +32,7 @@ import torch
 # =============================================================================
 
 RUN_TAG = "exp34"
-ASTAR_DIR = Path("/workspace/sam/minireason_archives/data_pts/astar")
+ASTAR_DIR = Path("/workspace/user/chainsearch_archives/data_pts/astar")
 DEFAULT_INPUT = ASTAR_DIR / "steering_evaluations" / f"{RUN_TAG}_steering_suite.pt"
 DEFAULT_OUTPUT_DIR = Path(f"{RUN_TAG}_steering_results_plots")
 DEFAULT_DPI = 220
@@ -46,6 +46,7 @@ EXPERIMENT_DISPLAY = {
 }
 
 COLOR_BG = "#FCFCFD"
+COLOR_CANVAS = "#FFFFFF"
 COLOR_PANEL = "#F2F6FF"
 COLOR_GRID = "#C9D6EE"
 COLOR_TEXT = "#26364F"
@@ -114,8 +115,8 @@ plt.rcParams.update({
     "ytick.labelsize": 9.5,
     "legend.fontsize": 9.5,
     "figure.titlesize": 14,
-    "figure.facecolor": COLOR_BG,
-    "savefig.facecolor": COLOR_BG,
+    "figure.facecolor": COLOR_CANVAS,
+    "savefig.facecolor": COLOR_CANVAS,
     "axes.facecolor": COLOR_PANEL,
     "axes.edgecolor": COLOR_BLUE,
     "axes.labelcolor": COLOR_TEXT,
@@ -2040,12 +2041,12 @@ def plot_side_effects(data: dict[str, Any], args: argparse.Namespace) -> list[Pa
                 label="No changes",
             ),
         ],
-        loc="upper center", ncol=4, bbox_to_anchor=(0.58, 0.946),
+        loc="upper center", ncol=4, bbox_to_anchor=(0.567, 0.946),
         fontsize=13.0,
     )
     fig.suptitle(
-        "Effects of steering on trace mechanics",
-        x=0.58, y=0.975, color=COLOR_TITLE, fontsize=15.5,
+        "Effects of steering on trace properties",
+        x=0.567, y=0.975, color=COLOR_TITLE, fontsize=15.5,
     )
     fig.supxlabel(
         "Model component",
@@ -2054,12 +2055,11 @@ def plot_side_effects(data: dict[str, Any], args: argparse.Namespace) -> list[Pa
         fontsize=13.5,
         color=COLOR_BLUE,
     )
-    fig.supylabel(
+    axes[0].set_ylabel(
         "Intervention position and method",
-        x=0.025,
-        y=0.50,
         fontsize=13.5,
         color=COLOR_BLUE,
+        labelpad=18,
     )
     fig.subplots_adjust(
         left=0.15, right=0.985, bottom=0.19, top=0.84, wspace=0.12,
@@ -2226,7 +2226,7 @@ def plot_head_breadth(data: dict[str, Any], args: argparse.Namespace) -> list[Pa
             ),
             fontsize=13.5,
         )
-        axes[1, col].set_title("Whole-trace validity", fontsize=13.5)
+        axes[1, col].set_title("Trace validity", fontsize=13.5)
         tick_labels = [HEAD_VARIANT_DISPLAY[variant] for variant in categories]
         for ax in axes[:, col]:
             ax.set_xticks(range(len(categories)), tick_labels)
@@ -2257,6 +2257,148 @@ def plot_head_breadth(data: dict[str, Any], args: argparse.Namespace) -> list[Pa
     )
     return save_figure(fig, "head_set_and_scaling_controls", args)
 
+
+def plot_head_breadth_single_row(
+    data: dict[str, Any],
+    args: argparse.Namespace,
+) -> list[Path]:
+    """Show primary outcomes without the trace-validity row."""
+    rows = unique_condition_rows(
+        positive_scaled_rows(data["test_condition_rows"])
+    )
+    if not rows:
+        return []
+
+    families = [
+        family for family in ("reachability", "final_answer")
+        if any(row["label_family"] == family for row in rows)
+    ]
+
+    fig, axes = plt.subplots(
+        1,
+        len(families),
+        figsize=(6.4 * len(families), 3.8),
+        sharex="col",
+        squeeze=False,
+    )
+
+    for col, family in enumerate(families):
+        subset = rows_where(rows, label_family=family)
+        methods = available_methods(subset)
+        categories = [
+            variant for variant in HEAD_VARIANT_ORDER
+            if any(
+                row["selection_variant"] == variant
+                for row in subset
+            )
+        ]
+
+        lookup: dict[tuple[str, str], dict[str, Any]] = {}
+        for variant in categories:
+            for method in methods:
+                matches = rows_where(
+                    subset,
+                    selection_variant=variant,
+                    method=method,
+                )
+                if len(matches) > 1:
+                    raise RuntimeError(
+                        f"Expected at most one selected "
+                        f"{family}/{variant}/{method} condition; "
+                        f"found {len(matches)}."
+                    )
+                if matches:
+                    lookup[(variant, method)] = matches[0]
+
+        draw_grouped_transition_bars(
+            axes[0, col],
+            categories,
+            methods,
+            lookup,
+            (
+                "final_answer"
+                if family == "final_answer"
+                else "next_state_viable"
+            ),
+            show_direction_labels=False,
+        )
+
+        axes[0, col].set_title(
+            (
+                "Final-answer correctness"
+                if family == "final_answer"
+                else "Next-state reachability"
+            ),
+            fontsize=13.5,
+        )
+
+        tick_labels = [
+            HEAD_VARIANT_DISPLAY[variant]
+            for variant in categories
+        ]
+        axes[0, col].set_xticks(
+            range(len(categories)),
+            tick_labels,
+        )
+        axes[0, col].tick_params(
+            axis="both",
+            labelsize=11.5,
+            colors=COLOR_BLUE,
+        )
+
+    axes[0, 0].set_ylabel(
+        "Changed test cases",
+        fontsize=12.5,
+    )
+
+    methods = available_methods(rows)
+    legend_handles = [
+        Patch(
+            facecolor=METHOD_COLOR[method],
+            edgecolor=METHOD_COLOR[method],
+            label=METHOD_DISPLAY[method],
+        )
+        for method in methods
+    ] + [
+        Line2D(
+            [0],
+            [0],
+            marker="D",
+            linestyle="none",
+            markersize=5.5,
+            markerfacecolor=COLOR_PANEL,
+            markeredgecolor=COLOR_BLUE,
+            label="No changes",
+        ),
+    ]
+
+    fig.legend(
+        handles=legend_handles,
+        loc="upper center",
+        ncol=len(legend_handles),
+        bbox_to_anchor=(0.535, 0.910),
+        fontsize=10.5,
+    )
+    fig.suptitle(
+        "Attention-head selection and intervention scaling",
+        x=0.535,
+        y=0.985,
+        color=COLOR_TITLE,
+        fontsize=15,
+    )
+    fig.subplots_adjust(
+        left=0.09,
+        right=0.98,
+        bottom=0.25,
+        top=0.72,
+        wspace=0.12,
+    )
+
+    return save_figure(
+        fig,
+        "head_set_and_scaling_controls_single_row",
+        args,
+    )
 
 def plot_intervention_frequency_compact(data: dict[str, Any], args: argparse.Namespace) -> list[Path]:
     """Paper-facing paired counts for single, repeated, and multipoint steering."""
@@ -2343,6 +2485,134 @@ def plot_intervention_frequency_compact(data: dict[str, Any], args: argparse.Nam
     )
     return save_figure(fig, "intervention_frequency_heldout_effects_compact", args)
 
+
+def plot_intervention_frequency_compact_single_row(
+    data: dict[str, Any],
+    args: argparse.Namespace,
+) -> list[Path]:
+    """Show primary intervention-frequency outcomes without trace validity."""
+    rows = unique_condition_rows(
+        positive_scaled_rows(data["test_condition_rows"])
+    )
+    if not rows:
+        return []
+
+    families = [
+        family for family in FAMILY_ORDER
+        if any(row["label_family"] == family for row in rows)
+    ]
+
+    fig, axes = plt.subplots(
+        1,
+        len(families),
+        figsize=(6.7 * len(families), 3.8),
+        sharex="col",
+        squeeze=False,
+    )
+
+    for col, family in enumerate(families):
+        subset = rows_where(rows, label_family=family)
+        methods = available_methods(subset)
+        categories = [
+            schedule
+            for schedule in SCHEDULE_ORDER
+            if any(row.get("schedule") == schedule for row in subset)
+        ]
+
+        lookup: dict[tuple[str, str], dict[str, Any]] = {}
+        for schedule in categories:
+            for method in methods:
+                matches = rows_where(
+                    subset,
+                    schedule=schedule,
+                    method=method,
+                )
+                if len(matches) != 1:
+                    raise RuntimeError(
+                        f"Expected one selected "
+                        f"{family}/{schedule}/{method} condition; "
+                        f"found {len(matches)}."
+                    )
+                lookup[(schedule, method)] = matches[0]
+
+        primary_outcome = (
+            "final_answer"
+            if family == "final_answer"
+            else "future_all_reachable"
+        )
+        draw_grouped_transition_bars(
+            axes[0, col],
+            categories,
+            methods,
+            lookup,
+            primary_outcome,
+            show_direction_labels=False,
+        )
+
+        axes[0, col].set_title(
+            (
+                "Final-answer correctness"
+                if family == "final_answer"
+                else "Entire observed future remains reachable"
+            ),
+            fontsize=13.5,
+            pad=7,
+        )
+        axes[0, col].set_ylabel("")
+        axes[0, col].set_xticks(
+            range(len(categories)),
+            [
+                SCHEDULE_DISPLAY[schedule]
+                for schedule in categories
+            ],
+        )
+        axes[0, col].tick_params(
+            axis="both",
+            labelsize=11.5,
+            colors=COLOR_BLUE,
+        )
+
+    axes[0, 0].set_ylabel(
+        "Changed test problems",
+        fontsize=12.5,
+        labelpad=7,
+    )
+
+    all_methods = available_methods(rows)
+    fig.legend(
+        handles=transition_legend_handles(all_methods),
+        loc="upper center",
+        ncol=len(all_methods) + 1,
+        bbox_to_anchor=(0.525, 0.910),
+        fontsize=10.5,
+    )
+    fig.suptitle(
+        "Effects of single, repeated, and multipoint steering",
+        x=0.525,
+        y=0.985,
+        color=COLOR_TITLE,
+        fontsize=15,
+    )
+    fig.supxlabel(
+        "Intervention schedule",
+        x=0.525,
+        y=0.040,
+        fontsize=12,
+        color=COLOR_BLUE,
+    )
+    fig.subplots_adjust(
+        left=0.09,
+        right=0.98,
+        bottom=0.22,
+        top=0.72,
+        wspace=0.12,
+    )
+
+    return save_figure(
+        fig,
+        "intervention_frequency_heldout_effects_compact_single_row",
+        args,
+    )
 
 def plot_native_direct_pairs(data: dict[str, Any], args: argparse.Namespace) -> list[Path]:
     rows = unique_condition_rows([
@@ -2481,7 +2751,9 @@ PLOTS: dict[str, Callable[[dict[str, Any], argparse.Namespace], list[Path]]] = {
     "side_effects": plot_side_effects,
     "checkpoint_summary": plot_checkpoint_summary,
     "head_breadth": plot_head_breadth,
+    "head_breadth_single_row": plot_head_breadth_single_row,
     "intervention_frequency_compact": plot_intervention_frequency_compact,
+    "intervention_frequency_compact_single_row": plot_intervention_frequency_compact_single_row,
     "native_direct_pairs": plot_native_direct_pairs,
 }
 PLOT_EXPERIMENT = {
@@ -2495,7 +2767,9 @@ PLOT_EXPERIMENT = {
     "checkpoint_summary": "steering-atlas",
     "native_direct_pairs": "steering-atlas",
     "head_breadth": "headcount",
+    "head_breadth_single_row": "headcount",
     "intervention_frequency_compact": "staying-power",
+    "intervention_frequency_compact_single_row": "staying-power",
 }
 SUITE_PLOTS: dict[str, Callable[[dict[str, dict[str, Any]], argparse.Namespace], list[Path]]] = {
     "directionality": plot_directionality_summary,
@@ -2504,7 +2778,10 @@ CORE_PLOTS = (
     "dose_response", "validation_stability", "test_comparison",
     "rescue_damage", "validity_tradeoff", "validation_heatmap",
     "side_effects", "checkpoint_summary", "head_breadth",
-    "intervention_frequency_compact", "native_direct_pairs",
+    "head_breadth_single_row",  
+    "intervention_frequency_compact", 
+    "intervention_frequency_compact_single_row",
+    "native_direct_pairs",
     "directionality",
 )
 

@@ -19,13 +19,13 @@ import torch
 from collections import Counter
 
 ASTAR_PATH = (
-    "/workspace/sam/minireason_archives/data_pts/astar/"
+    "/workspace/user/chainsearch_archives/data_pts/astar/"
     "astar_data_NALL_S6-6_T{6:100-999}_exp2500_trace10000_sw8_stick0_"
     "compact0_useh20_h2all0_h2k1.0_seed42_fmtv2.pt"
 )
 
 HR3_SETMINUS_PATH = (
-    "/workspace/sam/minireason_archives/data_pts/colton_h3/"
+    "/workspace/user/chainsearch_archives/data_pts/colton_h3/"
     "hr3_samples_setminus_astar_sharded"
 )
 

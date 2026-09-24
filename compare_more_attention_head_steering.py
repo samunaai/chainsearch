@@ -1124,6 +1124,7 @@ METHOD_COLORS = {
 
 # Paper figure palette. Keep aligned with plot_probe_results.py.
 PAPER_FIGURE_BG = "#FCFCFD"
+PAPER_CANVAS_BG = "#FFFFFF"
 PAPER_PANEL_BG = "#F2F6FF"
 PAPER_DEEP_BLUE = "#1C4587"
 PAPER_GAIN_FILL = "#7EA5D6"
@@ -1139,7 +1140,7 @@ DEFAULT_REFERENCE_HEAD_COUNT = 4
 FORMAT_VERSION = 1
 DEFAULT_OUTPUT_DIR = (
     Path(__file__).resolve().parent.parent
-    / "minireason_archives" / "attention_head_steering_comparison"
+    / "chainsearch_archives" / "attention_head_steering_comparison"
 )
 
 
@@ -1202,7 +1203,7 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=(
             Path(__file__).resolve().parent.parent
-            / "minireason_archives" / "attention_head_ablations"
+            / "chainsearch_archives" / "attention_head_ablations"
             / "attention_head_ablations.pt"
         ),
         help="Completed inspected CAA run whose test problem IDs must be excluded.",
@@ -2434,7 +2435,8 @@ def paired_counts(
 def save_figure(fig: plt.Figure, stem: str, paths: dict[str, Path], args: argparse.Namespace) -> None:
     paths["figures"].mkdir(parents=True, exist_ok=True)
     for extension in args.formats:
-        fig.savefig(paths["figures"] / f"{stem}.{extension}", dpi=args.dpi, bbox_inches="tight")
+        fig.savefig(paths["figures"] / f"{stem}.{extension}", dpi=args.dpi, bbox_inches="tight",
+                    facecolor=PAPER_CANVAS_BG, transparent=False,)
     plt.close(fig)
 
 
@@ -2445,7 +2447,7 @@ def style_paper_figure(
     grid: bool = True,
 ) -> None:
     """Apply the blue paper aesthetic to the supplied data axes."""
-    fig.patch.set_facecolor(PAPER_FIGURE_BG)
+    fig.patch.set_facecolor(PAPER_CANVAS_BG)
     target_axes = list(fig.axes if axes is None else axes)
     legends = list(fig.legends)
     for axis in target_axes:
@@ -2859,6 +2861,115 @@ def plot_reachability_local_global_counts(
     save_figure(fig, "reachability_local_to_global_counts", paths, args)
 
 
+def plot_local_global_position_counts(
+    state: dict[str, Any], paths: dict[str, Path], args: argparse.Namespace,
+) -> None:
+    source_rows = positive_test_rows(state, "position")
+    if not source_rows:
+        return
+
+    fig = plt.figure(figsize=(12.0, 5.2))
+    grid = fig.add_gridspec(1, 2)
+    panels = (
+        (
+            fig.add_subplot(grid[0, 0]),
+            "final_answer",
+            "expr_target_correct",
+            "Steering final-answer correctness\nusing final-answer directions",
+        ),
+        (
+            fig.add_subplot(grid[0, 1]),
+            "reachability",
+            "expr_target_correct",
+            "Steering final-answer correctness\nusing reachability directions",
+        ),
+    )
+
+    final_answer_axes = []
+    for axis, track, field, title in panels:
+        task = TASK_BY_TRACK[track]
+        rows = [row for row in source_rows if row["task"] == task]
+        if not rows:
+            axis.set_visible(False)
+            continue
+
+        methods = [
+            method for method in args.methods
+            if any(row["method"] == method for row in rows)
+        ]
+        lookup = {
+            (row["checkpoint"], row["method"]): row
+            for row in rows
+        }
+        draw_paired_count_bars(
+            axis, list(args.checkpoints), methods, lookup, field,
+        )
+        axis.set_title(title, fontsize=13.0)
+        axis.set_xticks(
+            range(len(args.checkpoints)),
+            [CHECKPOINT_DISPLAY[value] for value in args.checkpoints],
+            rotation=30,
+            ha="right",
+        )
+        axis.tick_params(axis="both", labelsize=11, colors=PAPER_DEEP_BLUE)
+
+        setting_labels = {
+            METHOD_DISPLAY[method]: (
+                f"{METHOD_DISPLAY[method]} "
+                f"({args.reference_head_count} heads, "
+                f"β={state['selected_betas'][selection_key(method, task)]:g})"
+            )
+            for method in methods
+        }
+        handles, labels = axis.get_legend_handles_labels()
+        axis.legend(
+            handles,
+            [setting_labels.get(label, label) for label in labels],
+            fontsize=8.5,
+            loc="best",
+        )
+        if field == "expr_target_correct":
+            final_answer_axes.append(axis)
+
+    # Compare both final-answer panels on the same scale.
+    if final_answer_axes:
+        lower = min(axis.get_ylim()[0] for axis in final_answer_axes)
+        upper = max(axis.get_ylim()[1] for axis in final_answer_axes)
+        for axis in final_answer_axes:
+            axis.set_ylim(lower, upper)
+
+    fig.suptitle(
+        "Local and global effects of steering",
+        x=0.53, y=0.98, fontsize=15, color=PAPER_TITLE,
+    )
+    fig.supxlabel(
+        "Intervention position",
+        x=0.53, y=-0.02, fontsize=12, color=PAPER_DEEP_BLUE,
+    )
+    fig.subplots_adjust(
+        left=0.08, right=0.985, top=0.80, bottom=0.29,
+        wspace=0.30, 
+    )
+
+    # One shared y-axis label, centered beside the left panel.
+    for axis in (panels[0][0],):
+        bounds = axis.get_position()
+        fig.text(
+            bounds.x0 - 0.055,
+            (bounds.y0 + bounds.y1) / 2,
+            "Changed test problems",
+            rotation=90,
+            ha="center",
+            va="center",
+            fontsize=12.5,
+            color=PAPER_DEEP_BLUE,
+        )
+
+    style_paper_figure(fig)
+    save_figure(fig, "heldout_position_local_global_counts", paths, args)
+
+
+
 def plot_directionality_counts(
     state: dict[str, Any], paths: dict[str, Path], args: argparse.Namespace,
 ) -> None:
@@ -3142,6 +3253,7 @@ def render_outputs(
     plot_heldout_headcount_counts(state, paths, args)
     plot_heldout_position_counts(state, paths, args)
     plot_reachability_local_global_counts(state, paths, args)
+    plot_local_global_position_counts(state, paths, args)
     plot_directionality_counts(state, paths, args)
     write_summary(state, paths, args)
 

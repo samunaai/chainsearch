@@ -45,17 +45,17 @@ import pretrain_and_sft_model as pm
 
 
 DEFAULT_DATASET_PATH = (
-    "/workspace/sam/minireason_archives/data_pts/astar/"
+    "/workspace/user/chainsearch_archives/data_pts/astar/"
     "astar_data_NALL_S6-6_T{6:100-999}_exp2500_trace10000_sw8_stick0_"
     "compact0_useh20_h2all0_h2k1.0_seed42_fmtv2.pt"
 )
 
 DEFAULT_TOKEN_CACHE_DIR = (
-    "/workspace/sam/minireason_archives/data_pts/astar/tokenisation_cache"
+    "/workspace/user/chainsearch_archives/data_pts/astar/tokenisation_cache"
 )
 
 DEFAULT_SPLIT_DIR = (
-    "/workspace/sam/minireason_archives/data_pts/astar"
+    "/workspace/user/chainsearch_archives/data_pts/astar"
 )
 
 # =========================

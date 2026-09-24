@@ -990,6 +990,7 @@ RULE_COLORS = {
 }
 
 PAPER_FIGURE_BG = "#FCFCFD"
+PAPER_CANVAS_BG = "#FFFFFF"
 PAPER_PANEL_BG = "#F2F6FF"
 PAPER_DEEP_BLUE = "#1C4587"
 PAPER_DARK_TEXT = "#26364F"
@@ -1022,7 +1023,7 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=(
             Path(__file__).resolve().parent.parent
-            / "minireason_archives" / "attention_head_ablations"
+            / "chainsearch_archives" / "attention_head_ablations"
         ),
     )
     parser.add_argument(
@@ -2146,13 +2147,14 @@ def save_figure(
     output_dir = paths[directory_key]
     output_dir.mkdir(parents=True, exist_ok=True)
     for extension in args.formats:
-        fig.savefig(output_dir / f"{stem}.{extension}", dpi=args.dpi, bbox_inches="tight")
+        fig.savefig(output_dir / f"{stem}.{extension}", dpi=args.dpi, bbox_inches="tight", 
+                    facecolor=PAPER_CANVAS_BG, transparent=False,)
     plt.close(fig)
 
 
 def style_clear_interpretation_figure(fig: plt.Figure) -> None:
     """Match the blue paper aesthetic without changing diagnostic figures."""
-    fig.patch.set_facecolor(PAPER_FIGURE_BG)
+    fig.patch.set_facecolor(PAPER_CANVAS_BG)
     legends = list(fig.legends)
     for axis in fig.axes:
         axis.set_facecolor(PAPER_PANEL_BG)

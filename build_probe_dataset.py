@@ -35,8 +35,8 @@ import pretrain_and_sft_model as pm
 RUN_TAG = "exp34"
 RANDOM_SEED = 42
 
-ASTAR_DIR = "/workspace/sam/minireason_archives/data_pts/astar"
-MODEL_DIR = "/workspace/sam/minireason_archives/model_pts/astar"
+ASTAR_DIR = "/workspace/user/chainsearch_archives/data_pts/astar"
+MODEL_DIR = "/workspace/user/chainsearch_archives/model_pts/astar"
 PROBING_DIR = os.path.join(ASTAR_DIR, "probing")
 
 TOKEN_CACHE_PATH = os.path.join(

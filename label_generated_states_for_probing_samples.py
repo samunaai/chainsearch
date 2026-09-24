@@ -52,7 +52,7 @@ import pretrain_and_sft_model as pm
 RUN_TAG = "exp34"
 ORACLE_VERSION = "forward_subset_dp_v1"
 
-ASTAR_DIR = "/workspace/sam/minireason_archives/data_pts/astar"
+ASTAR_DIR = "/workspace/user/chainsearch_archives/data_pts/astar"
 PROBING_DIR = os.path.join(ASTAR_DIR, "probing")
 
 EVALUATED_PATH = os.path.join(

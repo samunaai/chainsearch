@@ -59,7 +59,7 @@ from tqdm.auto import tqdm
 RUN_TAG = "exp34"
 SEED = 42
 
-ASTAR_DIR = "/workspace/sam/minireason_archives/data_pts/astar"
+ASTAR_DIR = "/workspace/user/chainsearch_archives/data_pts/astar"
 PROBING_DIR = os.path.join(ASTAR_DIR, "probing")
 
 DATASET_PATH = os.path.join(PROBING_DIR, f"{RUN_TAG}_astar_probe_dataset.pt")

@@ -93,11 +93,11 @@ FILE_EXT = ".pt"
  
 CONFIG = {
     "input": (
-        "/workspace/sam/minireason_archives/data_pts/"
+        "/workspace/user/chainsearch_archives/data_pts/"
         "colton_h3/hr3_samples_setminus_astar_sharded"
     ),
     "output": (
-        "/workspace/sam/minireason_archives/data_pts/"
+        "/workspace/user/chainsearch_archives/data_pts/"
         "pretrain/randomized_target_traces.pt"
     ),
     "num_records": -1,          # -1 => all exact-hit source records

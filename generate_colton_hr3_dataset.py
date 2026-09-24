@@ -107,7 +107,7 @@ FILE_EXT = ".pt" if _HAS_TORCH else ".pkl"
 # ── Output paths ─────────────────────────────────────────────────────────────
 OUTPUT_DIR      = os.environ.get(
     "COUNTDOWN_OUTPUT_DIR",
-    "/workspace/sam/minireason_archives/data_pts/colton_h3",
+    "/workspace/user/chainsearch_archives/data_pts/colton_h3",
 )
 # Full runs are stored as a manifest bundle directory, not one monolithic .pt.
 # Using an extension-free name avoids the automatic "*_sharded" rename.

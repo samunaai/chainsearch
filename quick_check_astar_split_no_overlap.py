@@ -27,7 +27,7 @@ import torch
 RUN_TAG = "exp35"
 
 SPLIT_PATH = Path(
-    "/workspace/sam/minireason_archives/data_pts/astar/"
+    "/workspace/user/chainsearch_archives/data_pts/astar/"
     f"{RUN_TAG}_astar_target_random_train_val_test_probe_split.pt"
 )
 

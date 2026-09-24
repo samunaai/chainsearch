@@ -17,9 +17,9 @@ if not sys.stdout.isatty():
     except AttributeError:
         pass
 
-ASTAR_PATH = "/workspace/sam/minireason_archives/data_pts/astar/astar_data_NALL_S6-6_T{6:100-999}_exp2500_trace10000_sw8_stick0_compact0_useh20_h2all0_h2k1.0_seed42_fmtv2.pt"
-HR3_PATH   = "/workspace/sam/minireason_archives/data_pts/colton_h3/countdown_colton_h3_full"
-OUT_DIR    = "/workspace/sam/minireason_archives/data_pts/colton_h3/hr3_samples_setminus_astar_sharded"
+ASTAR_PATH = "/workspace/user/chainsearch_archives/data_pts/astar/astar_data_NALL_S6-6_T{6:100-999}_exp2500_trace10000_sw8_stick0_compact0_useh20_h2all0_h2k1.0_seed42_fmtv2.pt"
+HR3_PATH   = "/workspace/user/chainsearch_archives/data_pts/colton_h3/countdown_colton_h3_full"
+OUT_DIR    = "/workspace/user/chainsearch_archives/data_pts/colton_h3/hr3_samples_setminus_astar_sharded"
 SHARD_SIZE = 100_000
 
 # Use more than one CPU, but keep it gentle. This is mostly I/O + filtering,

@@ -207,9 +207,9 @@ STAGE_OVERRIDES = dict(
         run_tag=f"{PRETRAIN_RUN_TAG}_pretrain",
         stage="pretrain",
         stage_label="Countdown Pretraining",
-        dataset_path="/workspace/sam/minireason_archives/data_pts/pretrain/randomized_target_traces_sharded",
-        model_dir="/workspace/sam/minireason_archives/model_pts/pretrain",
-        token_cache_dir="/workspace/sam/minireason_archives/data_pts/pretrain/tokenisation_cache",
+        dataset_path="/workspace/user/chainsearch_archives/data_pts/pretrain/randomized_target_traces_sharded",
+        model_dir="/workspace/user/chainsearch_archives/model_pts/pretrain",
+        token_cache_dir="/workspace/user/chainsearch_archives/data_pts/pretrain/tokenisation_cache",
         val_per_back=56, # validation samples per BACK bucket (e.g. 9 buckets * 56 = 504 validation samples total)        
         lr=[3e-4],
         batch_size=128,
@@ -221,10 +221,10 @@ STAGE_OVERRIDES = dict(
         run_tag=f"{ASTAR_RUN_TAG}_astar",
         stage="finetune",
         stage_label="Countdown A* Finetuning",
-        dataset_path="/workspace/sam/minireason_archives/data_pts/astar/astar_data_NALL_S6-6_T{6:100-999}_exp2500_trace10000_sw8_stick0_compact0_useh20_h2all0_h2k1.0_seed42_fmtv2.pt",
-        model_dir="/workspace/sam/minireason_archives/model_pts/astar",
+        dataset_path="/workspace/user/chainsearch_archives/data_pts/astar/astar_data_NALL_S6-6_T{6:100-999}_exp2500_trace10000_sw8_stick0_compact0_useh20_h2all0_h2k1.0_seed42_fmtv2.pt",
+        model_dir="/workspace/user/chainsearch_archives/model_pts/astar",
         init_from_ckpt=(
-            "/workspace/sam/minireason_archives/model_pts/pretrain/"
+            "/workspace/user/chainsearch_archives/model_pts/pretrain/"
             f"{PRETRAIN_RUN_TAG}_pretrain_best.pt"
         ),
         resume=False,  # Only set True to continue an existing astar finetuning run; if a last.pt is found, it will override init_from_ckpt.
@@ -237,16 +237,16 @@ STAGE_OVERRIDES = dict(
         # val_per_back=100, # validation samples per BACK bucket
         split_mode="train_val_test",
         split_path=(
-            "/workspace/sam/minireason_archives/data_pts/astar/"
+            "/workspace/user/chainsearch_archives/data_pts/astar/"
             f"{ASTAR_RUN_TAG}_astar_target_random_"
             "train_val_test_probe_split.pt"
         ),
         require_existing_split=True,
         val_per_back=100,
         test_per_back=1000,
-        token_cache_dir="/workspace/sam/minireason_archives/data_pts/astar/tokenisation_cache",
+        token_cache_dir="/workspace/user/chainsearch_archives/data_pts/astar/tokenisation_cache",
         save_eval_indices=(
-            "/workspace/sam/minireason_archives/data_pts/astar/"
+            "/workspace/user/chainsearch_archives/data_pts/astar/"
             f"{ASTAR_RUN_TAG}_astar_target_random_eval_indices.pt"
         ),
     ),
