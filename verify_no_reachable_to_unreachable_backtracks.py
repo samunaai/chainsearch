@@ -6,7 +6,7 @@ import torch
 
 
 LABEL_PATH = Path(
-    "/workspace/sam/minireason_archives/data_pts/astar/probing/"
+    "/workspace/user/chainsearch_archives/data_pts/astar/probing/"
     "exp34_generated_state_solvability_for_probing_samples.pt"
 )
 
