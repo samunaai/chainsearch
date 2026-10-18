@@ -6,7 +6,7 @@ Code for **On Reasoning Correctness Directions**.
 
 <p align="center">
   <a href="assets/chainsearch.pdf">
-    <img src="assets/chainsearch.webp" alt="ChainSearch task overview" width="60%">
+    <img src="assets/chainsearch.webp" alt="ChainSearch task overview" width="50%">
   </a>
 </p>
 
