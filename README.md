@@ -12,9 +12,13 @@ Code for **On Reasoning Correctness Directions**.
 
 ## Overview
 
-ChainSearch is a controlled arithmetic reasoning task that extends Countdown with explicit search and backtracking. Models combine numbers to reach a target, explore alternative paths, and return to earlier states when they encounter dead ends.
+ChainSearch is a controlled arithmetic reasoning task designed to aid the study of chain-of-thought.
 
-We train a 3-million-parameter language model on this task to study its reasoning processes in a controlled setting. A dedicated `BACK` token captures backtracking directly in the reasoning trace, making it possible to follow the model’s search through alternative paths. The task brings together A* search and heuristics inspired by human problem-solving strategies, providing a setting for studying how models learn to search and recover from errors.
+We adapt the well-known [▶️ Countdown numbers game](https://www.youtube.com/watch?v=pfa3MHLLSWI&t=3s) by introducing a dedicated `BACK` token that makes backtracking explicit in reasoning traces.
+
+We train a 3-million-parameter language model on ChainSearch samples generated using A* search with cost-function heuristics designed to mimic human foresight strategies.
+
+The model must combine numbers to reach a target, explore alternative paths, and return to earlier states when it encounters dead ends.
 
 ## Running the Experiments
 
