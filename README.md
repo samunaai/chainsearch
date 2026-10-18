@@ -37,10 +37,12 @@ The main command flow is provided in [`commands.sh`](commands.sh). Refer to this
 
 <!-- TODO: Add environment setup and step-by-step instructions from commands.sh. -->
 
-## Citation
+## Support ☕
 
 If you are inspired by this work, please consider citing our paper:
 
 <!-- TODO: Replace this placeholder with the arXiv BibTeX entry once available. -->
 
 **On Reasoning Correctness Directions.** 2026. arXiv:XXXX.XXXXX.
+
+For assistance, please email [msn307@nyu.edu](mailto:msn307@nyu.edu)
