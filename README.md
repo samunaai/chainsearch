@@ -2,7 +2,7 @@
 
 <img src="assets/institutions.webp" alt="MBZUAI · Mila · RIKEN AIP · Tohoku University" width="500">
 
-Code for **On Reasoning Correctness Directions**.
+Code for the paper **“On Reasoning Correctness Directions”**.
 
 📄 **Paper:** [arXiv:XXXX.XXXXX](https://arxiv.org/abs/XXXX.XXXXX)
 
