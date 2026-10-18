@@ -1,5 +1,7 @@
 # ChainSearch
 
+<br>
+
 <img src="assets/institutions_.webp" alt="MBZUAI · Mila · RIKEN AIP · Tohoku University" width="620">
 
 Code for **On Reasoning Correctness Directions**.
