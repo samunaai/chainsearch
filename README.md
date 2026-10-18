@@ -4,7 +4,7 @@ Code for **On Reasoning Correctness Directions**.
 
 📄 **Paper:** [arXiv:XXXX.XXXXX](https://arxiv.org/abs/XXXX.XXXXX)
 
-[![ChainSearch task overview](assets/chainsearch.png)](assets/chainsearch.pdf)
+[![ChainSearch task overview](assets/chainsearch.webp)](assets/chainsearch.pdf)
 
 ## Overview
 
