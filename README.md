@@ -18,7 +18,7 @@ We adapt the well-known Countdown numbers game† by introducing a dedicated `BA
 
 We train a 3-million-parameter language model on ChainSearch samples generated using A* search with cost-function heuristics designed to mimic human foresight strategies.
 
-The model must combine numbers to reach a target, explore alternative paths, and return to earlier states when it encounters dead ends.
+Given a set of numbers and a target value, the objective is to construct an arithmetic expression that equals the target, using each supplied number at most once. The model must combine numbers to reach a target, explore alternative paths, and return to earlier states when it encounters dead ends.
 
 † _Readers unfamiliar with Countdown can consult these mathematical analyses [[1]](https://doc.gold.ac.uk/aisb50/AISB50-S02/AISB50-S2-Colton-paper.pdf), [[2]](https://easychair.org/publications/paper/2L76), [[3]](https://arxiv.org/abs/2508.02900), or watch a demonstration [[4]](https://www.youtube.com/watch?v=pfa3MHLLSWI&t=3s)._
 
