@@ -14,7 +14,7 @@ Code for **On Reasoning Correctness Directions**.
 
 ChainSearch is a controlled arithmetic reasoning task that extends Countdown with explicit search and backtracking. Models combine numbers to reach a target, explore alternative paths, and return to earlier states when they encounter dead ends.
 
-We train a 3-million-parameter language model on this task to investigate whether internal linear directions that encode reasoning correctness can also improve reasoning through steering. Using linear probes, mean activation differences, and direct optimisation, we find that correctness can be linearly decodable without yielding a consistently useful direction for steering.
+We train a 3-million-parameter language model on this task to study its reasoning processes in a controlled setting. A dedicated `BACK` token captures backtracking directly in the reasoning trace, making it possible to follow the model’s search through alternative paths. The task brings together A* search and heuristics inspired by human problem-solving strategies, providing a setting for studying how models learn to search and recover from errors.
 
 ## Running the Experiments
 
