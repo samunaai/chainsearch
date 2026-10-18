@@ -12,7 +12,7 @@ Code for **On Reasoning Correctness Directions**.
 
 ## Overview
 
-ChainSearch is a controlled arithmetic reasoning task designed to aid the study of chain-of-thought.
+`ChainSearch` is a controlled arithmetic reasoning task designed to aid the study of chain-of-thought.
 
 We adapt the well-known [Countdown numbers game](https://doc.gold.ac.uk/aisb50/AISB50-S02/AISB50-S2-Colton-paper.pdf)† by introducing a dedicated `BACK` token that makes backtracking explicit in reasoning traces.
 
