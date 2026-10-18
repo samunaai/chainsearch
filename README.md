@@ -39,7 +39,7 @@ The main command flow is provided in [`commands.sh`](commands.sh). Refer to this
 
 ## Citation
 
-If you use this work, please cite our paper:
+If you are inspired by this work, please consider citing our paper:
 
 <!-- TODO: Replace this placeholder with the arXiv BibTeX entry once available. -->
 
