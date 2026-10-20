@@ -4,7 +4,7 @@
 
 Code for the paper **“On Reasoning Correctness Directions”**.
 
-📄 **Paper:** [arXiv:XXXX.XXXXX](https://arxiv.org/abs/XXXX.XXXXX)
+📄 **Paper:** [arXiv:2610.25464](https://arxiv.org/abs/2610.25464)
 
 <p align="center">
   <a href="assets/chainsearch.pdf">
@@ -41,8 +41,16 @@ The main command flow is provided in [`commands.sh`](commands.sh). Refer to this
 
 If you are inspired by this work, please consider citing our paper:
 
-<!-- TODO: Replace this placeholder with the arXiv BibTeX entry once available. -->
-
-**On Reasoning Correctness Directions.** 2026. arXiv:XXXX.XXXXX.
+```bibtex
+@misc{nwadike2026reasoningcorrectnessdirections,
+  title         = {On Reasoning Correctness Directions},
+  author        = {Munachiso Samuel Nwadike and Zayd M. K. Zuhri and Rifo Genadi and Abzal Nurgazy and Ali Mekky and Alham Fikri Aji and Zangir Iklassov and Kentaro Inui},
+  year          = {2026},
+  eprint        = {2610.25464},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url           = {https://arxiv.org/abs/2610.25464}
+}
+```
 
 For assistance, please email [msn307@nyu.edu](mailto:msn307@nyu.edu)
